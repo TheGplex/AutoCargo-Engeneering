@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>AutoCargo Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="login-bg">
+    <div class="login-container">
+        <h1>AutoCargo</h1>
+
+        {% if error %}
+            <div class="error-message">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="password" name="password" placeholder="Passwort" autocomplete="current-password" required>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+</body>
+</html>

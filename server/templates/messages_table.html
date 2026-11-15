@@ -1,0 +1,16 @@
+<table>
+    <tr>
+        <th>Absender</th>
+        <th>Empfänger</th>
+        <th>Nachricht</th>
+        <th>Zeitpunkt</th>
+    </tr>
+    {% for message in messages %}
+    <tr>
+        <td>{{ message[0] }}</td>
+        <td>{{ message[3] }}</td>
+        <td class="message-cell">{{ message[1] }}</td>
+        <td>{{ message[2] }}</td>
+    </tr>
+    {% endfor %}
+</table>

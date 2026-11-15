@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>AutoCargo Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="logout-fixed">
+        <form method="POST" action="{{ url_for('logout') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="logout-button">Logout</button>
+        </form>
+    </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-messages">
+          {% for category, message in messages %}
+            <div class="flash flash-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    <div class="main-container">
+        <h1>AutoCargo Dashboard</h1>
+
+        <section>
+            <h3>Gerät hinzufügen</h3>
+            <form method="POST" action="{{ url_for('add_device') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="text" name="name" placeholder="Gerätename" maxlength="32" pattern="[A-Za-z0-9_\-]{1,32}" required>
+                <input type="text" name="ip" placeholder="IP-Adresse" required>
+                <button type="submit">Gerät hinzufügen</button>
+            </form>
+        </section>
+
+        <section>
+            <h3>Alle Geräte</h3>
+            <table>
+                <tr>
+                    <th>Gerätename</th>
+                    <th>IP-Adresse</th>
+                    <th>Aktion</th>
+                </tr>
+                {% for device in devices %}
+                <tr>
+                    <td>{{ device[1] }}</td>
+                    <td>{{ device[2] }}</td>
+                    <td>
+                        <form method="POST" action="{{ url_for('delete_device', device_id=device[0]) }}">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button class="delete-button">🗑️</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </section>
+
+        <section>
+            <h3>Nachricht senden</h3>
+            <form method="POST" action="{{ url_for('send_message') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="text" name="recipient" placeholder="Empfänger (Gerätename)" required>
+                <textarea name="message" placeholder="Nachricht" maxlength="500" required></textarea>
+                <button type="submit">Nachricht senden</button>
+            </form>
+        </section>
+
+        <section>
+            <h3 class="section-header">
+                Nachrichten
+                <button id="toggle-autoupdate" class="autoupdate-btn">Auto-Update pausieren</button>
+            </h3>
+            <div id="messages-table">
+                <table>
+                    <tr>
+                        <th>Absender</th>
+                        <th>Empfänger</th>
+                        <th>Nachricht</th>
+                        <th>Zeitpunkt</th>
+                    </tr>
+                    {% for message in messages %}
+                    <tr>
+                        <td>{{ message[0] }}</td>
+                        <td>{{ message[3] }}</td>
+                        <td class="message-cell">{{ message[1] }}</td>
+                        <td>{{ message[2] }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <footer class="page-footer">
+        AutoCargo · HTL St. Pölten, Abteilung Elektronik &amp; Technische Informatik
+    </footer>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

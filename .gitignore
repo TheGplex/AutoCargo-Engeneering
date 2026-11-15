@@ -1,0 +1,11 @@
+# Secrets: never commit these
+.env
+secrets.h
+*.key
+*_IP_CONFIG
+
+# Build output
+.pio/
+__pycache__/
+*.pyc
+.venv/
